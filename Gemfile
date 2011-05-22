@@ -9,4 +9,6 @@ gem 'spree',
 
 gem "spree_bitcoin_checkout", 
   :require => "spree_bitcoin_checkout",
-  :path => "../spree-bitcoin-checkout"
+  :git => "git@github.com:davout/spree-bitcoin-checkout.git"
+
+gem 'capistrano'
