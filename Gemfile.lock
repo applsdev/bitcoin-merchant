@@ -5,8 +5,9 @@ GIT
     spree_bitcoin_checkout (0.1)
       spree_core (>= 0.60.99)
 
-PATH
-  remote: /home/david/rails/spree
+GIT
+  remote: https://github.com/spree/spree.git
+  revision: 35ae73610cc5f2469fc389bc0f6b942fb77de435
   specs:
     spree (0.60.99)
       spree_api (= 0.60.99)
