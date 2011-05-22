@@ -19,7 +19,7 @@ BitcoinMerchant::Application.configure do
   # just comment this out and Rails will serve the files
 
   # See everything in the log (default is :info)
-  # config.log_level = :debug
+ config.log_level = :debug
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
@@ -46,4 +46,7 @@ BitcoinMerchant::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # TODO : Remove me when going live
+  config.consider_all_requests_local       = true
 end
