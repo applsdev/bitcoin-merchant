@@ -1,22 +1,48 @@
-set :application, "set your application name here"
-set :repository,  "set your repository location here"
+require 'bundler/capistrano'
 
-set :scm, :subversion
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+set :default_env, 'production'
+set :rails_env, ENV['rails_env'] || ENV['RAILS_ENV'] || default_env
 
-role :web, "your web-server here"                          # Your HTTP server, Apache/etc
-role :app, "your app-server here"                          # This may be the same as your `Web` server
-role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
-role :db,  "your slave db-server here"
+django = "django.webflows.fr"
 
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
+set :application, "bitcoin-merchant"
+set :repository,  "git@github.com:davout/bitcoin-merchant.git"
 
-# If you are using Passenger mod_rails uncomment this:
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+set :scm, :git
+set :deploy_to, "~/bitcoin-merchant"
+
+set :use_sudo, false
+
+set :user, "rails"
+set :scm_passphrase, Capistrano::CLI.password_prompt("Rails user password on django : ")
+
+set :branch, "master"
+
+role :web, django
+role :app, django
+role :db,  django, :primary => true
+
+default_run_options[:pty] = true  # Must be set for the password prompt from git to work
+set :deploy_via, :remote_cache
+set :git_enable_submodules, 1
+
+namespace :deploy do
+  task :start do ; end
+  task :stop do ; end
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{File.join(current_path,'tmp','restart.txt')}"
+  end
+end
+
+task :copy_production_configurations do
+  %w{database}.each do |c|
+    run "cp #{shared_path}/config/#{c}.yml #{release_path}/config/#{c}.yml"
+  end
+end
+
+task :remove_config_ru do
+  run "rm -f #{release_path}/config.ru"
+end
+
+after "deploy:update_code", :copy_production_configurations
+after :copy_production_configurations, :remove_config_ru
