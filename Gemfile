@@ -8,7 +8,7 @@ gem 'spree',
   :git => "https://github.com/spree/spree.git",
   :branch => "0-60-stable"
 
-gem "spree_bitcoin_checkout", 
+gem "spree_bitcoin_checkout", '0.1.3',
   :require => "spree_bitcoin_checkout"
 
 gem 'capistrano'
